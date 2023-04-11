@@ -9,7 +9,6 @@ package route;
 
 service localGuide {
     rpc GetLocation(stream IniLoc) returns (stream FinLoc) {}
-    rpc GetLocationOK(stream IniLoc) returns (Accept) {}
 }
 
 message IniLoc {
@@ -20,6 +19,3 @@ message FinLoc {
     string fin_location=1;
 }
 
-message Accept {
-    string accept=1;
-}

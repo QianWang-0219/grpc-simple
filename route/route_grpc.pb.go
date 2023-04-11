@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LocalGuideClient interface {
 	GetLocation(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_GetLocationClient, error)
-	GetLocationOK(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_GetLocationOKClient, error)
 }
 
 type localGuideClient struct {
@@ -65,46 +64,11 @@ func (x *localGuideGetLocationClient) Recv() (*FinLoc, error) {
 	return m, nil
 }
 
-func (c *localGuideClient) GetLocationOK(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_GetLocationOKClient, error) {
-	stream, err := c.cc.NewStream(ctx, &LocalGuide_ServiceDesc.Streams[1], "/route.localGuide/GetLocationOK", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &localGuideGetLocationOKClient{stream}
-	return x, nil
-}
-
-type LocalGuide_GetLocationOKClient interface {
-	Send(*IniLoc) error
-	CloseAndRecv() (*Accept, error)
-	grpc.ClientStream
-}
-
-type localGuideGetLocationOKClient struct {
-	grpc.ClientStream
-}
-
-func (x *localGuideGetLocationOKClient) Send(m *IniLoc) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *localGuideGetLocationOKClient) CloseAndRecv() (*Accept, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(Accept)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // LocalGuideServer is the server API for LocalGuide service.
 // All implementations must embed UnimplementedLocalGuideServer
 // for forward compatibility
 type LocalGuideServer interface {
 	GetLocation(LocalGuide_GetLocationServer) error
-	GetLocationOK(LocalGuide_GetLocationOKServer) error
 	mustEmbedUnimplementedLocalGuideServer()
 }
 
@@ -114,9 +78,6 @@ type UnimplementedLocalGuideServer struct {
 
 func (UnimplementedLocalGuideServer) GetLocation(LocalGuide_GetLocationServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
-}
-func (UnimplementedLocalGuideServer) GetLocationOK(LocalGuide_GetLocationOKServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetLocationOK not implemented")
 }
 func (UnimplementedLocalGuideServer) mustEmbedUnimplementedLocalGuideServer() {}
 
@@ -157,32 +118,6 @@ func (x *localGuideGetLocationServer) Recv() (*IniLoc, error) {
 	return m, nil
 }
 
-func _LocalGuide_GetLocationOK_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(LocalGuideServer).GetLocationOK(&localGuideGetLocationOKServer{stream})
-}
-
-type LocalGuide_GetLocationOKServer interface {
-	SendAndClose(*Accept) error
-	Recv() (*IniLoc, error)
-	grpc.ServerStream
-}
-
-type localGuideGetLocationOKServer struct {
-	grpc.ServerStream
-}
-
-func (x *localGuideGetLocationOKServer) SendAndClose(m *Accept) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *localGuideGetLocationOKServer) Recv() (*IniLoc, error) {
-	m := new(IniLoc)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // LocalGuide_ServiceDesc is the grpc.ServiceDesc for LocalGuide service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -195,11 +130,6 @@ var LocalGuide_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "GetLocation",
 			Handler:       _LocalGuide_GetLocation_Handler,
 			ServerStreams: true,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "GetLocationOK",
-			Handler:       _LocalGuide_GetLocationOK_Handler,
 			ClientStreams: true,
 		},
 	},

@@ -53,7 +53,7 @@ func runfunc(client pb.LocalGuideClient) {
 		if err := stream.Send(&request); err != nil {
 			log.Fatalln(err)
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 
 }
@@ -75,5 +75,11 @@ func Clientup(path string) {
 }
 
 func main() {
-	Clientup("localhost:30031")
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("Enter the port number: ")
+	scanner.Scan()
+	input := scanner.Text()
+	fmt.Println("YOU ENTERED:", input)
+	time.Sleep(2 * time.Second)
+	Clientup(input)
 }
