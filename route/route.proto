@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "grpc-simple/route";
+package route;
+
+// a simple bidirectional streaming example
+// client发送文件存储的iniLoc给server，server返回一个ok
+// server根据iniLoc完成二维拼接任务，发送finLoc给client，client回复ok
+
+service localGuide {
+    rpc GetLocation(stream IniLoc) returns (stream FinLoc) {}
+    rpc GetLocationOK(stream IniLoc) returns (Accept) {}
+}
+
+message IniLoc {
+    string ini_location=1;
+}
+
+message FinLoc {
+    string fin_location=1;
+}
+
+message Accept {
+    string accept=1;
+}
