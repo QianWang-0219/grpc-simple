@@ -14,8 +14,8 @@ import (
 
 // 图片拼接（两张）
 func MergeImageNew(base image.Image, mask image.Image) (*image.RGBA, error) {
-	width := 5000
-	height := 5000
+	width := base.Bounds().Max.X - 1 + mask.Bounds().Max.X - 1
+	height := base.Bounds().Max.Y - 1 + mask.Bounds().Max.Y - 1
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))                                             // 创建一块画布
 	draw.Draw(dst, image.Rect(0, height/4, width/2, 3*height/4), base, image.Pt(0, 0), draw.Over)     // 绘制第一幅图
 	draw.Draw(dst, image.Rect(width/2, height/4, width, 3*height/4), mask, image.Pt(0, 0), draw.Over) // 绘制第二幅图

@@ -30,6 +30,7 @@ func GetFiles(folder string) []string {
 					newSlice = append(newSlice, path)
 				case `image/png`:
 					println(`这是PNG文件`)
+					//newSlice = append(newSlice, path)
 				default:
 					println(`这是其他文件`)
 				}
