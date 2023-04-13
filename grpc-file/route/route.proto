@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package route;
+
+
+service localGuide {
+    rpc GetLocation(stream IniLoc) returns (stream FinLoc) {}
+    rpc UploadFile(stream UploadFileRequest) returns (StringResponse) {}
+}
+
+message IniLoc {
+    string ini_location=1;
+}
+
+message FinLoc {
+    string fin_location=1;
+}
+
+message MetaData {
+    string filename = 1;
+    string extension = 2;
+  }
+
+message UploadFileRequest {
+    oneof request {
+        MetaData metadata = 1;
+        bytes chunk_data = 2;
+        }
+}
+
+message StringResponse {
+    string message = 1;
+}

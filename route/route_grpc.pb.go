@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LocalGuideClient interface {
 	GetLocation(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_GetLocationClient, error)
+	UploadFile(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_UploadFileClient, error)
 }
 
 type localGuideClient struct {
@@ -64,11 +65,46 @@ func (x *localGuideGetLocationClient) Recv() (*FinLoc, error) {
 	return m, nil
 }
 
+func (c *localGuideClient) UploadFile(ctx context.Context, opts ...grpc.CallOption) (LocalGuide_UploadFileClient, error) {
+	stream, err := c.cc.NewStream(ctx, &LocalGuide_ServiceDesc.Streams[1], "/route.localGuide/UploadFile", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &localGuideUploadFileClient{stream}
+	return x, nil
+}
+
+type LocalGuide_UploadFileClient interface {
+	Send(*UploadFileRequest) error
+	CloseAndRecv() (*StringResponse, error)
+	grpc.ClientStream
+}
+
+type localGuideUploadFileClient struct {
+	grpc.ClientStream
+}
+
+func (x *localGuideUploadFileClient) Send(m *UploadFileRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *localGuideUploadFileClient) CloseAndRecv() (*StringResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(StringResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // LocalGuideServer is the server API for LocalGuide service.
 // All implementations must embed UnimplementedLocalGuideServer
 // for forward compatibility
 type LocalGuideServer interface {
 	GetLocation(LocalGuide_GetLocationServer) error
+	UploadFile(LocalGuide_UploadFileServer) error
 	mustEmbedUnimplementedLocalGuideServer()
 }
 
@@ -78,6 +114,9 @@ type UnimplementedLocalGuideServer struct {
 
 func (UnimplementedLocalGuideServer) GetLocation(LocalGuide_GetLocationServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
+}
+func (UnimplementedLocalGuideServer) UploadFile(LocalGuide_UploadFileServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
 func (UnimplementedLocalGuideServer) mustEmbedUnimplementedLocalGuideServer() {}
 
@@ -118,6 +157,32 @@ func (x *localGuideGetLocationServer) Recv() (*IniLoc, error) {
 	return m, nil
 }
 
+func _LocalGuide_UploadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(LocalGuideServer).UploadFile(&localGuideUploadFileServer{stream})
+}
+
+type LocalGuide_UploadFileServer interface {
+	SendAndClose(*StringResponse) error
+	Recv() (*UploadFileRequest, error)
+	grpc.ServerStream
+}
+
+type localGuideUploadFileServer struct {
+	grpc.ServerStream
+}
+
+func (x *localGuideUploadFileServer) SendAndClose(m *StringResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *localGuideUploadFileServer) Recv() (*UploadFileRequest, error) {
+	m := new(UploadFileRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // LocalGuide_ServiceDesc is the grpc.ServiceDesc for LocalGuide service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +195,11 @@ var LocalGuide_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "GetLocation",
 			Handler:       _LocalGuide_GetLocation_Handler,
 			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "UploadFile",
+			Handler:       _LocalGuide_UploadFile_Handler,
 			ClientStreams: true,
 		},
 	},

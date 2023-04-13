@@ -18,7 +18,7 @@ type localGuideServer struct {
 }
 
 func (s *localGuideServer) finalLocationOnce(request *pb.IniLoc) (*pb.FinLoc, error) {
-	// 模拟二维拼接
+	// 长图片拼接
 	s.location[0].FinLocation = image.Image_mosaic(request.IniLocation)
 	fmt.Println("...........")
 	return s.location[0], nil
@@ -53,18 +53,6 @@ func newServer() *localGuideServer {
 		},
 	}
 }
-
-// runNumGoroutineMonitor 协程数量监控
-// func runNumGoroutineMonitor() {
-// 	log.Printf("协程数量->%d\n", runtime.NumGoroutine())
-
-// 	for {
-// 		select {
-// 		case <-time.After(time.Second):
-// 			log.Printf("协程数量->%d\n", runtime.NumGoroutine())
-// 		}
-// 	}
-// }
 
 func main() {
 	//runNumGoroutineMonitor()
