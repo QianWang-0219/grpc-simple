@@ -1,15 +1,23 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"log"
 	"net"
+	"os"
 
 	"grpc-simple/image"
 	pb "grpc-simple/route"
+	ck "grpc-simple/utils"
 
 	"google.golang.org/grpc"
+)
+
+const (
+	//HOST = "localhost"
+	PORT = "30031"
 )
 
 type localGuideServer struct {
@@ -55,9 +63,21 @@ func newServer() *localGuideServer {
 }
 
 func main() {
+	//task2_ipPort :=  "192.168.31.93:30031"
+	fmt.Print("请输入服务器ip(eg.127.0.0.1):")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	input := scanner.Text()
+
+	HOST, err := ck.IsIPv4(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	task2_ipPort := HOST + ":" + PORT
 	//runNumGoroutineMonitor()
 	// 新建一个服务的listener
-	lis, err := net.Listen("tcp", "localhost:30031")
+	lis, err := net.Listen("tcp", task2_ipPort)
 	if err != nil {
 		log.Fatalln("cannot create a listener at the address")
 	}

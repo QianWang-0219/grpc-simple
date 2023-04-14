@@ -3,18 +3,15 @@ package main
 import (
 	"bufio"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
 	"time"
 
 	pb "grpc-simple/route"
+	ck "grpc-simple/utils"
 
 	encode "grpc-simple/encodeImage"
 
@@ -22,9 +19,10 @@ import (
 )
 
 const (
-	task1_ipPort = "localhost:30033" //图像识别
-	task2_ipPort = "localhost:30031" //图像拼接
-	task_ipPort  = "localhost:30030" //文件传输
+	//HOST         = "localhost"
+	task1_ipPort = "30033" //图像识别
+	task2_ipPort = "30031" //图像拼接
+	task_ipPort  = "30030" //文件传输
 	chunk_size   = 1024
 )
 
@@ -177,23 +175,6 @@ func Clientup(path string) {
 	}
 }
 
-func IsIPv4(ipAddr string) (string, error) {
-	ip := net.ParseIP(ipAddr)
-	if ip != nil && strings.Contains(ipAddr, ".") {
-		return ipAddr, nil
-	}
-	return ipAddr, errors.New("IP address not valid")
-}
-
-func IsPort(input string) (string, error) {
-	pattern := "\\d+"
-	res, _ := regexp.MatchString(pattern, input)
-	if res {
-		return input, nil
-	}
-	return input, errors.New("Port number not valid")
-}
-
 func main() {
 	var ipPort string
 	fmt.Println("请选择您需要的服务:")
@@ -208,17 +189,44 @@ func main() {
 
 	// 对输入进行判断
 	if input == "1" {
-		ipPort = task1_ipPort
+		//ipPort = task1_ipPort
+		fmt.Print("请输入服务器ip地址:")
+		scanner.Scan()
+		input := scanner.Text()
+		HOST, err := ck.IsIPv4(input)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		ipPort = HOST + ":" + task1_ipPort
 	} else if input == "2" {
-		ipPort = task2_ipPort
+		//ipPort = task2_ipPort
+		fmt.Print("请输入服务器ip地址:")
+		scanner.Scan()
+		input := scanner.Text()
+		HOST, err := ck.IsIPv4(input)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		ipPort = HOST + ":" + task2_ipPort
 	} else if input == "3" {
-		ipPort = task_ipPort
+		//ipPort = task_ipPort
+		fmt.Print("请输入服务器ip地址:")
+		scanner.Scan()
+		input := scanner.Text()
+		HOST, err := ck.IsIPv4(input)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		ipPort = HOST + ":" + task_ipPort
 	} else {
 		fmt.Println("您未选择预设任务!")
 		fmt.Print("若您选择自定义任务，请输入自定义任务模块的ip地址(eg.127.0.0.1):")
 		scanner.Scan()
 		input = scanner.Text()
-		ip, err := IsIPv4(input)
+		HOST, err := ck.IsIPv4(input)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -226,12 +234,12 @@ func main() {
 		fmt.Print("请输入自定义任务模块的端口号:")
 		scanner.Scan()
 		input = scanner.Text()
-		port, err := IsPort(input)
+		port, err := ck.IsPort(input)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		ipPort = ip + ":" + port
+		ipPort = HOST + ":" + port
 	}
 	//fmt.Println("YOU ENTERED:", ipPort)
 	time.Sleep(2 * time.Second)
