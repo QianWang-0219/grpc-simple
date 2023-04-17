@@ -6,11 +6,7 @@ from route import route_pb2 as route__pb2
 
 
 class localGuideStub(object):
-    """a simple bidirectional streaming example
-    client发送文件存储的iniLoc给server，server返回一个ok
-    server根据iniLoc完成二维拼接任务，发送finLoc给client，client回复ok
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -28,14 +24,15 @@ class localGuideStub(object):
                 request_serializer=route__pb2.UploadFileRequest.SerializeToString,
                 response_deserializer=route__pb2.StringResponse.FromString,
                 )
+        self.DownloadFile = channel.unary_stream(
+                '/route.localGuide/DownloadFile',
+                request_serializer=route__pb2.MetaData.SerializeToString,
+                response_deserializer=route__pb2.FileResponse.FromString,
+                )
 
 
 class localGuideServicer(object):
-    """a simple bidirectional streaming example
-    client发送文件存储的iniLoc给server，server返回一个ok
-    server根据iniLoc完成二维拼接任务，发送finLoc给client，client回复ok
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def GetLocation(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
@@ -44,6 +41,12 @@ class localGuideServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def UploadFile(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DownloadFile(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -62,6 +65,11 @@ def add_localGuideServicer_to_server(servicer, server):
                     request_deserializer=route__pb2.UploadFileRequest.FromString,
                     response_serializer=route__pb2.StringResponse.SerializeToString,
             ),
+            'DownloadFile': grpc.unary_stream_rpc_method_handler(
+                    servicer.DownloadFile,
+                    request_deserializer=route__pb2.MetaData.FromString,
+                    response_serializer=route__pb2.FileResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'route.localGuide', rpc_method_handlers)
@@ -70,11 +78,7 @@ def add_localGuideServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class localGuide(object):
-    """a simple bidirectional streaming example
-    client发送文件存储的iniLoc给server，server返回一个ok
-    server根据iniLoc完成二维拼接任务，发送finLoc给client，client回复ok
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def GetLocation(request_iterator,
@@ -107,5 +111,22 @@ class localGuide(object):
         return grpc.experimental.stream_unary(request_iterator, target, '/route.localGuide/UploadFile',
             route__pb2.UploadFileRequest.SerializeToString,
             route__pb2.StringResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DownloadFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/route.localGuide/DownloadFile',
+            route__pb2.MetaData.SerializeToString,
+            route__pb2.FileResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

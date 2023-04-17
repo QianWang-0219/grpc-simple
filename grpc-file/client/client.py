@@ -33,6 +33,13 @@ def run():
         response = stub.UploadFile(read_iterfile('/Users/wang_qian0219/code/python/grpc-file/resource/sum.txt'))
         print("client received: " + response.message)
 
+        filename = 'aaa'
+        extension = '.jpg'
+        filepath = get_filepath(filename, extension)
+        for entry_response in stub.DownloadFile(route_pb2.MetaData(filename=filename, extension=extension)):
+            with open(filepath, mode="ab") as f:
+                f.write(entry_response.chunk_data)
+
 
 if __name__ == '__main__':
     logging.basicConfig()

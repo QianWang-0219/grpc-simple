@@ -8,7 +8,6 @@ import (
 	"net"
 	"os"
 
-	"grpc-simple/image"
 	pb "grpc-simple/route"
 	ck "grpc-simple/utils"
 
@@ -17,7 +16,7 @@ import (
 
 const (
 	//HOST = "localhost"
-	PORT = "30031"
+	PORT = "30032"
 )
 
 type localGuideServer struct {
@@ -27,7 +26,7 @@ type localGuideServer struct {
 
 func (s *localGuideServer) finalLocationOnce(request *pb.IniLoc) (*pb.FinLoc, error) {
 	// 长图片拼接
-	s.location[0].FinLocation = image.Image_mosaic(request.IniLocation)
+	s.location[0].FinLocation = ck.Image_mosaic(request.IniLocation)
 	fmt.Println("...........")
 	return s.location[0], nil
 }
@@ -63,7 +62,7 @@ func newServer() *localGuideServer {
 }
 
 func main() {
-	//task2_ipPort :=  "192.168.31.93:30031"
+	//task2_ipPort :=  "192.168.31.93:30032"
 	fmt.Print("请输入服务器ip(eg.127.0.0.1):")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()

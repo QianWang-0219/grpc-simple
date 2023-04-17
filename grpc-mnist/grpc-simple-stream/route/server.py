@@ -10,7 +10,7 @@ import decode_image
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 _HOST = 'localhost'
-_PORT = '30033'
+_PORT = '30031'
 
 
 class NewsService(route_pb2_grpc.localGuideServicer):
@@ -28,7 +28,9 @@ def serve():
     grpcServer = grpc.server(futures.ThreadPoolExecutor(max_workers=4))  # 创建一个服务器
 
     route_pb2_grpc.add_localGuideServicer_to_server(NewsService(), grpcServer)  # 在服务器中添加派生的接口服务（自己实现了处理函数）
-    grpcServer.add_insecure_port(_HOST + ':' + _PORT)  # 添加监听端口
+    task1_ipPort = _HOST + ':' + _PORT
+
+    grpcServer.add_insecure_port(task1_ipPort)  # 添加监听端口
     grpcServer.start()  # 启动服务器
     try:
         while True:

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0broute.proto\x12\x05route\"\x1e\n\x06IniLoc\x12\x14\n\x0cini_location\x18\x01 \x01(\t\"\x1e\n\x06\x46inLoc\x12\x14\n\x0c\x66in_location\x18\x01 \x01(\t\"/\n\x08MetaData\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x11\n\textension\x18\x02 \x01(\t\"Y\n\x11UploadFileRequest\x12#\n\x08metadata\x18\x01 \x01(\x0b\x32\x0f.route.MetaDataH\x00\x12\x14\n\nchunk_data\x18\x02 \x01(\x0cH\x00\x42\t\n\x07request\"!\n\x0eStringResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2\x82\x01\n\nlocalGuide\x12\x31\n\x0bGetLocation\x12\r.route.IniLoc\x1a\r.route.FinLoc\"\x00(\x01\x30\x01\x12\x41\n\nUploadFile\x12\x18.route.UploadFileRequest\x1a\x15.route.StringResponse\"\x00(\x01\x62\x06proto3'
+  serialized_pb=b'\n\x0broute.proto\x12\x05route\"\x1e\n\x06IniLoc\x12\x14\n\x0cini_location\x18\x01 \x01(\t\"\x1e\n\x06\x46inLoc\x12\x14\n\x0c\x66in_location\x18\x01 \x01(\t\"/\n\x08MetaData\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12\x11\n\textension\x18\x02 \x01(\t\"Y\n\x11UploadFileRequest\x12#\n\x08metadata\x18\x01 \x01(\x0b\x32\x0f.route.MetaDataH\x00\x12\x14\n\nchunk_data\x18\x02 \x01(\x0cH\x00\x42\t\n\x07request\"!\n\x0eStringResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\"\n\x0c\x46ileResponse\x12\x12\n\nchunk_data\x18\x01 \x01(\x0c\x32\xbc\x01\n\nlocalGuide\x12\x31\n\x0bGetLocation\x12\r.route.IniLoc\x1a\r.route.FinLoc\"\x00(\x01\x30\x01\x12\x41\n\nUploadFile\x12\x18.route.UploadFileRequest\x1a\x15.route.StringResponse\"\x00(\x01\x12\x38\n\x0c\x44ownloadFile\x12\x0f.route.MetaData\x1a\x13.route.FileResponse\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -203,6 +203,38 @@ _STRINGRESPONSE = _descriptor.Descriptor(
   serialized_end=259,
 )
 
+
+_FILERESPONSE = _descriptor.Descriptor(
+  name='FileResponse',
+  full_name='route.FileResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='chunk_data', full_name='route.FileResponse.chunk_data', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=261,
+  serialized_end=295,
+)
+
 _UPLOADFILEREQUEST.fields_by_name['metadata'].message_type = _METADATA
 _UPLOADFILEREQUEST.oneofs_by_name['request'].fields.append(
   _UPLOADFILEREQUEST.fields_by_name['metadata'])
@@ -215,6 +247,7 @@ DESCRIPTOR.message_types_by_name['FinLoc'] = _FINLOC
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['UploadFileRequest'] = _UPLOADFILEREQUEST
 DESCRIPTOR.message_types_by_name['StringResponse'] = _STRINGRESPONSE
+DESCRIPTOR.message_types_by_name['FileResponse'] = _FILERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 IniLoc = _reflection.GeneratedProtocolMessageType('IniLoc', (_message.Message,), {
@@ -252,6 +285,13 @@ StringResponse = _reflection.GeneratedProtocolMessageType('StringResponse', (_me
   })
 _sym_db.RegisterMessage(StringResponse)
 
+FileResponse = _reflection.GeneratedProtocolMessageType('FileResponse', (_message.Message,), {
+  'DESCRIPTOR' : _FILERESPONSE,
+  '__module__' : 'route_pb2'
+  # @@protoc_insertion_point(class_scope:route.FileResponse)
+  })
+_sym_db.RegisterMessage(FileResponse)
+
 
 
 _LOCALGUIDE = _descriptor.ServiceDescriptor(
@@ -261,8 +301,8 @@ _LOCALGUIDE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=262,
-  serialized_end=392,
+  serialized_start=298,
+  serialized_end=486,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetLocation',
@@ -281,6 +321,16 @@ _LOCALGUIDE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_UPLOADFILEREQUEST,
     output_type=_STRINGRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DownloadFile',
+    full_name='route.localGuide.DownloadFile',
+    index=2,
+    containing_service=None,
+    input_type=_METADATA,
+    output_type=_FILERESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

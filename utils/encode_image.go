@@ -1,4 +1,4 @@
-package encodeImage
+package utils
 
 import (
 	"encoding/base64"

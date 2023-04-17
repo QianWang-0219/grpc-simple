@@ -10,6 +10,7 @@ package route;
 service localGuide {
     rpc GetLocation(stream IniLoc) returns (stream FinLoc) {}
     rpc UploadFile(stream UploadFileRequest) returns (StringResponse) {}
+    rpc DownloadFile(MetaData) returns (stream FileResponse) {}
 }
 
 message IniLoc {
@@ -23,7 +24,7 @@ message FinLoc {
 message MetaData {
     string filename = 1;
     string extension = 2;
-  }
+}
   
 message UploadFileRequest {
     oneof request {
@@ -34,4 +35,8 @@ message UploadFileRequest {
 
 message StringResponse {
     string message = 1;
+}
+
+message FileResponse {
+    bytes chunk_data = 1;
 }
