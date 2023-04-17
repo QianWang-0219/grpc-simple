@@ -156,7 +156,7 @@ func runUpfilefunc(client pb.LocalGuideClient) {
 	//}
 }
 
-func Clientup(path string) {
+func Clientup(path string, port string) {
 	// 拨向端口，忽略证书验证（服务器没有提供证书），让dial变成blocking的，不要往下走
 	conn, err := grpc.Dial(path, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -168,7 +168,8 @@ func Clientup(path string) {
 
 	// 新建一个client
 	client := pb.NewLocalGuideClient(conn)
-	if path == task_ipPort {
+	fmt.Println(port, task_ipPort)
+	if port == task_ipPort {
 		runUpfilefunc(client)
 	} else {
 		runfunc(client, path)
@@ -177,6 +178,7 @@ func Clientup(path string) {
 
 func main() {
 	var ipPort string
+	var port string
 	fmt.Println("请选择您需要的服务:")
 	fmt.Println("1. 手写数字识别")
 	fmt.Println("2. 长图像拼接")
@@ -198,7 +200,8 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		ipPort = HOST + ":" + task1_ipPort
+		port = task1_ipPort
+		ipPort = HOST + ":" + port
 	} else if input == "2" {
 		//ipPort = task2_ipPort
 		fmt.Print("请输入服务器ip地址:")
@@ -209,9 +212,10 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		ipPort = HOST + ":" + task2_ipPort
+		port = task2_ipPort
+		ipPort = HOST + ":" + port
 	} else if input == "3" {
-		//ipPort = task_ipPort
+		ipPort = task_ipPort
 		fmt.Print("请输入服务器ip地址:")
 		scanner.Scan()
 		input := scanner.Text()
@@ -220,7 +224,9 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		ipPort = HOST + ":" + task_ipPort
+
+		port = task_ipPort
+		ipPort = HOST + ":" + port
 	} else {
 		fmt.Println("您未选择预设任务!")
 		fmt.Print("若您选择自定义任务，请输入自定义任务模块的ip地址(eg.127.0.0.1):")
@@ -243,5 +249,5 @@ func main() {
 	}
 	//fmt.Println("YOU ENTERED:", ipPort)
 	time.Sleep(2 * time.Second)
-	Clientup(ipPort)
+	Clientup(ipPort, port)
 }
